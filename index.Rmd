@@ -1,0 +1,254 @@
+---
+title: "Analisis explorativo de datos Hidrológicos"
+output: html_document
+---
+_Sara Alvarado Siles_
+
+### Introduccion  
+En el presente trabajo se utilizarán los datos hidrológicos de los caudales del río Estrella y el río Banano en el Caribe, mediante un FDC.csv (del íngles _Flow Durantion Curve_), trabajado con un formato en columnas.  
+La columna A, corresponde a un listado de diferentes fechas de cuando se tomaron las medidas del cause, y las columnas B y C corresponden a información sobre algunos datos de una estación fluviográfica sobre los ríos correspondientes. Para este trabajo se utiliza el mm(_milimetro_), ya que, este corresponde a la unidad del balance hidrológico.
+
+### Paso 1
+Importar a R los datos que vamos a necesitar con la función:
+
+>inp <- read.csv("FDC.csv", na.strings = "")
+```{r, echo=FALSE}
+#importar a R los datos
+
+inp <- read.csv("FDC.csv", na.strings = "")
+```
+### Paso 2  
+En el caso de que se quiera visualizar solo los datos iniciales del documento se puede llamar a la función: 
+
+>head(inp)
+
+La cual muestra la siguente información:
+```{r, echo=FALSE}
+#ver el inicio de la informacion del archivo
+head(inp)
+```
+### Paso 3
+Para ver las dimensiones del archivo y saber cuantas columnas y filas tiene, se puede usar la función:
+
+>dim(inp)
+```{r, echo=FALSE}
+#ver longitud del archivo
+dim(inp)
+
+```
+Esto quiere decir que hay _3845_ filas y _3_ columnas en este documento.
+
+### Paso 4  
+Siempre es importante comprobar si hay celdas vacias, para esto utilizamos la función:  
+
+>inp[!complete.cases(inp),]
+
+```{r, echo=FALSE}
+#comprobar si todas las celdas estan completas
+inp[!complete.cases(inp),]
+```
+En este caso hay cero celdas vacias, lo que significa que trabajamos con una serie continua de datos.  
+Si el documento presenta celdas vacias se puede utilizar la función:  
+
+>newinp <- na.omit(inp)
+
+Esta elimina las filas donde en alguna columna aparezca un NA.
+
+### Paso 5
+Para observar rapidamente los datos del documento, creamos un gráfico simple con:
+
+>plot(inp[,2], type = "l", col = "blue", main = "Volumen del agua en los ríos Estrella y Banano",sub = "Datos tomados en un periodo de tiempo entre 1973 a 1983", xlab = "Fechas", ylab = "caudal en mm por día")
+lines(inp[,3], col = "green")
+
+#### _Gráfico 1_
+
+azul= río Estrella  
+verde= río Banano
+
+```{r, echo=FALSE}
+
+#visualisar rapidamente un grafico
+plot(inp[,2], type = "l", col = "blue", main = "Volumen del agua en los ríos Estrella y Banano", sub = "Datos tomados en un periodo de tiempo entre 1973 a 1983", xlab = "Fechas", ylab = "caudal en mm por dia")
+lines(inp[,3], col = "green")
+```
+
+### Paso 6
+Para calcular el promedio anual del los caudales durante 10 años, llamamos a la función:
+
+ >summary(inp[,2:3])
+ 
+```{r, echo=FALSE}
+# promedio/resumen de los caudales diarios
+summary(inp[,2:3])
+```
+
+Los datos anteriores muestran como estan distribuidos los datos.
+
+Podemos ver que el rio Banano a pesar de que tiene una cuenca mas pequeña que el rio Estrella, maneja una mayor cantidad de agua, por lo que, el río Banano es una mayor fuente de agua.
+
+### Paso 7
+
+También podemos observar la información en forma de histograma para ver de una manera mas clara como se distribuyen esos datos, para ello se aplican las siguientes funciones que corresponden al río Estrella y al río Banano, respectivamente:
+
+>hist(inp[,2],main = "Histograma río Estrella", xlab = "Rango absoluto de caudales", ylab = "Frecuencia del caudal")  
+
+>hist(inp[,3],main = "Histograma río Banano", xlab = "Rango absoluto de caudales", ylab = "Frecuencia del caudal")
+
+#### _Gráfico 2_
+
+```{r, echo=FALSE}
+# histograma
+hist(inp[,2],main = "Histograma río Estrella", xlab = "Rango absoluto de caudales", ylab = "Frecuencia del caudal")
+```
+
+#### _Gráfico 3_
+
+```{r, echo=FALSE}
+hist(inp[,3],main = "Histograma río Banano", xlab = "Rango absoluto de caudales", ylab = "Frecuencia del caudal")
+
+```
+
+### Paso 8
+Para manejar los datos de forma mas fácil es posible asignar nombres a los datos usando la siguiente función:
+
+>names(inp) <- c("fecha", "Estrella", "Banano")  
+attach(inp)
+
+El comando _attach()_ ayuda hacer referencia a los nombres y encontrarlos mas facil.
+
+
+#### _Gráfico 4_
+
+Hacemos un gráfico para ver mejor los datos de los caudales del río Estrella.
+
+>plot(Estrella, main = "Información sobre los caudales del río Estrella", xlab = "Fechas", ylab = "Rio Estrella")
+
+```{r, echo=FALSE}
+# asignar nombres
+names(inp) <- c("fecha", "Estrella", "Banano")
+attach(inp)
+
+plot(Estrella, main = "Información sobre los caudales del río Estrella", xlab = "Fechas", ylab = "Río Estrella")
+```
+
+### Paso 9
+Para definir las fechas, se llama a la función:
+
+>Tempdate <- strptime(inp[,1], format = "%d/%m/%Y")
+
+```{r, echo=FALSE}
+# definir fecha
+Tempdate <- strptime(inp[,1], format = "%d/%m/%Y")
+```
+
+### Paso 10
+Ahora queremos calcular los promedios anuales y agregarlos a la serie de tiempo.  
+
+Esto lo hacemos con la función:
+
+>MAQ_Estrella <- tapply(Estrella, format(Tempdate, format= "%Y"), FUN = sum)
+
+>MAQ_Banano <- tapply(Banano, format(Tempdate, format= "%Y"), FUN = sum)
+
+```{r, echo=FALSE}
+# promedios anuales
+MAQ_Estrella <- tapply(Estrella, format(Tempdate, format= "%Y"), FUN = sum)
+MAQ_Banano <- tapply(Banano, format(Tempdate, format= "%Y"), FUN = sum)
+```
+
+### Paso 11
+Para exportar a .csv y guardar los datos de ambos rios en el directorio de trabajo, usamos la función:
+
+>write.csv(rbind(MAQ_Estrella,MAQ_Banano), file="MAQ.csv")
+
+El comando _rbing()_ guarda los datos para visualisarlos en filas.   
+En caso de que se quiera visualizar en columnas se puede utiliza el comando _Cbing()_
+```{r, echo=FALSE}
+write.csv(rbind(MAQ_Estrella,MAQ_Banano), file="MAQ.csv")
+```
+
+### Paso 12
+Para Visualizar rápidamente los valores anuales de los caudales en un gráfico y comparar directamente la información anterior, llamamos a la función:
+
+>plot(MAQ_Banano, ylim = c(100, 3000), main = "Comparación anual de los caudales del río Estrella y el río Banano", xlab = "Fechas", ylab = "Caudales Anuales")
+lines(MAQ_Estrella, col=2)
+
+#### _Gráfico 5_
+
+```{r, echo=FALSE}
+# Visualisar rapidamente los valores auales
+plot(MAQ_Banano, ylim = c(100, 3000), main = "Comparación anual de los caudales del río Estrella y el río Banano", xlab = "Fechas", ylab = "Caudales Anuales")
+lines(MAQ_Estrella, col=2)
+```
+
+### Paso 13
+Para calcular los promedios mensuales, usamos la función:
+
+>MMQ_Estrella <- tapply(Estrella, format(Tempdate, format= "%m"), FUN = sum)
+
+>MMQ_Banano <- tapply(Banano, format(Tempdate, format= "%m"), FUN = sum)
+
+#### _Gráfico 6_
+La información anterior se puede visualizar en un gráfico con la función:
+
+>plot(MMQ_Banano, ylim = c(100, 3000), main = "Comparación mensual de los caudales del rio Estrella y el rio Banano", xlab = "Fechas", ylab = "Caudales Mensuales")
+lines(MMQ_Estrella, col=2)
+
+```{r, echo=FALSE}
+# acumulados/promedio mensuales
+MMQ_Estrella <- tapply(Estrella, format(Tempdate, format= "%m"), FUN = sum)
+MMQ_Banano <- tapply(Banano, format(Tempdate, format= "%m"), FUN = sum)
+
+#grafico promedios mensuales
+plot(MMQ_Banano, ylim = c(100, 3000), main = "Comparación mensual de los caudales del río Estrella y el río Banano", xlab = "Fechas", ylab = "Caudales Mensuales")
+lines(MMQ_Estrella, col=2)
+```
+
+### Paso 14
+Para calcular y analizar la correlación de los caudales del río Banano y el río Estrella, y determinar si existe hidroclimáticamente una relación cuantificable, utilizamos:   
+
+>corinp <- cor(inp[,2:3], method = "spearman")  
+corinp
+
+El procedimiento _sperman_ es un método de correlación no paramétrico para datos ambientales. 
+
+```{r, echo=FALSE}
+# Analisis de correlación de los caudales del rio Banano y el rio Estrella
+corinp <- cor(inp[,2:3], method = "spearman")
+corinp
+```
+Podemos observar que presentan una relación relativamente baja de 0.37 lo cual, es extraño, ya que, son cuencas vecinas. Esta información nos permite deducir que existen diferentes factores que influyen en la distribución del agua de esta zona como por ejemplo, la covertura, o la geología del lugar.
+
+#### _Gráfico 7_
+Creamos el gráfico para observar mejor los datos:
+
+>plot(Estrella, Banano, main = "Correlación de los caudales del río Banano y el río Estrella", xlab = "Río Estrella", ylab = "Río Banano")
+
+```{r, echo=FALSE}
+plot(Estrella, Banano, main = "Correlación de los caudales del río Banano y el río Estrella", xlab = "Río Estrella", ylab = "Río Banano")
+```
+
+Esta información se puede exportar o crear una regresión, es decir, una cuantificación matemática de la correlación.
+
+### Paso 15
+Para crear un modelo de regresión lineal, llamamos a la función:
+
+>inp.lm <- lm(inp[,2] ~ inp[,3], data = inp)  
+summary(inp.lm)
+
+```{r, echo=FALSE}
+# modelo de regreción lineal
+inp.lm <- lm(inp[,2] ~ inp[,3], data = inp)
+summary(inp.lm)
+```
+#### _Gráfico 8,9,10,11_
+
+>plot(inp.lm)
+
+```{r, echo=FALSE}
+plot(inp.lm)
+```
+
+Con base en el modelo creado del río Estrella es posible predecir el modelo del caudal del río Banano, relacionando los residuos de ambas variables. 
+
+Toda la información que se analizó en el trabajo nos permite formular una idea sobre la cantidad de agua que recorre un río, o la cantidad de agua que huvo en un mes, entre muchos otros datos importantes.
