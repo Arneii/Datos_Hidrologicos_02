@@ -309,13 +309,14 @@ attach(inp)</p>
 <p>write.csv(rbind(MAQ_Estrella,MAQ_Banano), file=“MAQ.csv”)</p>
 </blockquote>
 <p>El comando <em>rbing()</em> guarda los datos para visualisarlos en filas.<br />
-En caso de que se quiera visualizar en columnas se puede utiliza el comando <em>Cbing()</em></p>
+En caso de que se quiera visualizar en columnas se puede utiliza el comando <em>cbing()</em></p>
 </div>
 <div id="paso-12" class="section level3">
 <h3>Paso 12</h3>
 <p>Para Visualizar rápidamente los valores anuales de los caudales en un gráfico y comparar directamente la información anterior, llamamos a la función:</p>
 <blockquote>
-<p>plot(MAQ_Banano, ylim = c(100, 3000), main = “Comparación anual de los caudales del río Estrella y el río Banano”, xlab = “Fechas”, ylab = “Caudales Anuales”) lines(MAQ_Estrella, col=2)</p>
+<p>plot(MAQ_Banano, ylim = c(100, 3000), main = “Comparación anual de los caudales del río Estrella y el río Banano”, xlab = “Fechas”, ylab = “Caudales Anuales”)<br />
+lines(MAQ_Estrella, col=2)</p>
 </blockquote>
 <div id="gráfico-5" class="section level4">
 <h4><em>Gráfico 5</em></h4>

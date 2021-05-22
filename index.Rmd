@@ -162,7 +162,7 @@ Para exportar a .csv y guardar los datos de ambos rios en el directorio de traba
 >write.csv(rbind(MAQ_Estrella,MAQ_Banano), file="MAQ.csv")
 
 El comando _rbing()_ guarda los datos para visualisarlos en filas.   
-En caso de que se quiera visualizar en columnas se puede utiliza el comando _Cbing()_
+En caso de que se quiera visualizar en columnas se puede utiliza el comando _cbing()_
 ```{r, echo=FALSE}
 write.csv(rbind(MAQ_Estrella,MAQ_Banano), file="MAQ.csv")
 ```
@@ -170,7 +170,7 @@ write.csv(rbind(MAQ_Estrella,MAQ_Banano), file="MAQ.csv")
 ### Paso 12
 Para Visualizar rápidamente los valores anuales de los caudales en un gráfico y comparar directamente la información anterior, llamamos a la función:
 
->plot(MAQ_Banano, ylim = c(100, 3000), main = "Comparación anual de los caudales del río Estrella y el río Banano", xlab = "Fechas", ylab = "Caudales Anuales")
+>plot(MAQ_Banano, ylim = c(100, 3000), main = "Comparación anual de los caudales del río Estrella y el río Banano", xlab = "Fechas", ylab = "Caudales Anuales")  
 lines(MAQ_Estrella, col=2)
 
 #### _Gráfico 5_
