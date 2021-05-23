@@ -175,6 +175,9 @@ lines(MAQ_Estrella, col=2)
 
 #### _Gráfico 5_
 
+Circulos=río Banano  
+Lineas=río Estrella
+
 ```{r, echo=FALSE}
 # Visualisar rapidamente los valores auales
 plot(MAQ_Banano, ylim = c(100, 3000), main = "Comparación anual de los caudales del río Estrella y el río Banano", xlab = "Fechas", ylab = "Caudales Anuales")
@@ -193,6 +196,9 @@ La información anterior se puede visualizar en un gráfico con la función:
 
 >plot(MMQ_Banano, ylim = c(100, 3000), main = "Comparación mensual de los caudales del rio Estrella y el rio Banano", xlab = "Fechas", ylab = "Caudales Mensuales")
 lines(MMQ_Estrella, col=2)
+
+Circulos=río Banano  
+Lineas=río Estrella
 
 ```{r, echo=FALSE}
 # acumulados/promedio mensuales
